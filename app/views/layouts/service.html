@@ -1,0 +1,87 @@
+{#
+  Shared layout for the Prepare and Complete pages.
+  Child layouts set: service ("prepare" or "complete"), navActive, backLink
+#}
+{% extends "govuk-prototype-kit/layouts/govuk-branded.njk" %}
+
+{% if service == "prepare" %}
+  {% set serviceName = "Prepare conversions and transfers" %}
+  {% set serviceUrl = "/prepare/project" %}
+  {% set navItems = [
+    { href: "/prepare/project", text: "Conversions", active: navActive == "conversions" },
+    { href: "#", text: "Transfers" },
+    { href: "#", text: "Significant changes" },
+    { href: "#", text: "Form a MAT" },
+    { href: "#", text: "Groups" }
+  ] %}
+{% else %}
+  {% set serviceName = "Complete conversions, transfers and changes" %}
+  {% set serviceUrl = "/complete/projects-to-hand-over" %}
+  {% set navItems = [
+    { href: "#", text: "Your projects" },
+    { href: "#", text: "Your team projects" },
+    { href: "/complete/projects-to-hand-over", text: "All projects", active: navActive == "all-projects" },
+    { href: "#", text: "Groups" },
+    { href: "#", text: "Service support" }
+  ] %}
+{% endif %}
+
+{% block pageTitle %}{% if errorList and errorList.length %}Error: {% endif %}{% if pageName %}{{ pageName }} - {% endif %}{{ serviceName }}{% endblock %}
+
+{% block govukHeader %}
+  <div class="app-dfe-header" role="banner">
+    <div class="govuk-width-container app-dfe-header__container">
+      <a href="/" class="app-dfe-header__logo">Department for Education</a>
+      {% if service == "complete" %}
+        <a href="#" class="app-dfe-header__search" aria-label="Search projects">
+          <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="7" fill="none" stroke="currentColor" stroke-width="3"/><line x1="15" y1="15" x2="22" y2="22" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+        </a>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}
+
+{% block govukServiceNavigation %}
+  {{ govukServiceNavigation({
+    serviceName: serviceName,
+    serviceUrl: serviceUrl,
+    navigation: navItems
+  }) }}
+{% endblock %}
+
+{% block beforeContent %}
+  {{ govukPhaseBanner({
+    tag: { text: "Beta" },
+    html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
+  }) }}
+  {% block secondaryNav %}{% endblock %}
+  {% if backLink %}
+    {{ govukBackLink({ href: backLink, text: "Back" }) }}
+  {% endif %}
+{% endblock %}
+
+{% block govukFooter %}
+  <div class="app-feedback">
+    <div class="govuk-width-container">
+      <h2 class="govuk-heading-m">Problems and feedback</h2>
+      <div class="app-feedback__rule"></div>
+      <p class="govuk-body">Tell us if something is broken or could be improved.</p>
+      {{ govukButton({ text: "Report a problem or give feedback", classes: "govuk-button--secondary", href: "#" }) }}
+    </div>
+  </div>
+  {% if service == "complete" %}
+    {% set footerLinks = [
+      { href: "#", text: "Accessibility statement" },
+      { href: "#", text: "Cookies" },
+      { href: "#", text: "Privacy notice" },
+      { href: "/", text: "Prototype start page" }
+    ] %}
+  {% else %}
+    {% set footerLinks = [
+      { href: "#", text: "Accessibility statement" },
+      { href: "#", text: "Cookies" },
+      { href: "/", text: "Prototype start page" }
+    ] %}
+  {% endif %}
+  {{ govukFooter({ meta: { items: footerLinks, visuallyHiddenTitle: "Footer links" } }) }}
+{% endblock %}

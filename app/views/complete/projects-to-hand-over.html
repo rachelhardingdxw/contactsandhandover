@@ -1,0 +1,87 @@
+{% extends "layouts/complete.html" %}
+{% set pageName = "Projects to handover" %}
+{% set navActive = "all-projects" %}
+
+{% block secondaryNav %}
+  <nav class="app-secondary-nav" aria-label="All projects">
+    <ul class="app-secondary-nav__list">
+      {% for item in ["Handover", "In progress", "By month", "By region", "By user", "By trust", "By local authority", "Completed", "Statistics", "Reports"] %}
+        <li class="app-secondary-nav__item {% if loop.first %}app-secondary-nav__item--current{% endif %}">
+          <a class="govuk-link app-secondary-nav__link" href="{{ '/complete/projects-to-hand-over' if loop.first else '#' }}" {% if loop.first %}aria-current="page"{% endif %}>{{ item }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  </nav>
+{% endblock %}
+
+{% block content %}
+{% if saved %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {{ govukNotificationBanner({
+        type: "success",
+        titleText: "Success",
+        html: '<h3 class="govuk-notification-banner__heading">Your progress has been saved</h3><p class="govuk-body">You can continue handing over ' + project.schoolName + ' at any time from this list.</p>'
+      }) }}
+    </div>
+  </div>
+{% endif %}
+
+<h1 class="govuk-heading-l">Projects to handover</h1>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <div class="govuk-inset-text">
+      <form method="get" action="#">
+        {{ govukInput({ label: { text: "Search for project to be handed over:" }, id: "search", name: "search", classes: "govuk-input--width-20", attributes: { placeholder: "Search by URN" } }) }}
+        {{ govukButton({ text: "Search", classes: "govuk-!-margin-bottom-0" }) }}
+      </form>
+    </div>
+    <p class="govuk-body">These projects have been worked on in Prepare, approved, and automatically added to Complete.</p>
+    <p class="govuk-body">However, you must add some missing details before the project can continue.</p>
+    <p class="govuk-body">Confirm who will manage these projects next, then add handover notes and contact details.</p>
+  </div>
+</div>
+
+{% set rows = [] %}
+{% if showOurs %}
+  {% set rows = rows.concat([[
+    { html: "<strong>" + project.schoolName + "</strong>" },
+    { text: project.urn },
+    { text: project.incomingTrust },
+    { text: "Dec 2026" },
+    { text: project.decisionDate },
+    { text: project.type },
+    { html: '<a class="govuk-link" href="/complete/handover/check-project">' + ("Continue handover" if started else "Add handover details") + '<span class="govuk-visually-hidden"> for ' + project.schoolName + '</span></a>' }
+  ]]) %}
+{% endif %}
+{% for p in others %}
+  {% set rows = rows.concat([[
+    { html: "<strong>" + p[0] + "</strong>" },
+    { text: p[1] },
+    { text: p[2] },
+    { text: p[3] },
+    { text: p[4] },
+    { text: p[5] },
+    { html: '<a class="govuk-link" href="#">Add handover details<span class="govuk-visually-hidden"> for ' + p[0] + '</span></a>' }
+  ]]) %}
+{% endfor %}
+
+{{ govukTable({
+  head: [
+    { text: "School or academy" },
+    { text: "URN" },
+    { text: "Incoming trust" },
+    { text: "Provisional conversion or transfer date" },
+    { text: "Date of decision" },
+    { text: "Project type" },
+    { text: "Add handover details" }
+  ],
+  rows: rows
+}) }}
+
+{{ govukPagination({
+  items: [ { number: 1, current: true, href: "#" }, { number: 2, href: "#" } ],
+  next: { href: "#" }
+}) }}
+{% endblock %}

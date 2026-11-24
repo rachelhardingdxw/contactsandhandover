@@ -1,0 +1,14 @@
+{% extends "layouts/complete.html" %}
+{% from "includes/macros.html" import projectCaption %}
+{% set pageName = "This project has already been handed over" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    {{ projectCaption(project) }}
+    <h1 class="govuk-heading-l">This project has already been handed over</h1>
+    <p class="govuk-body">{{ project.owner }} handed over this project. You do not need to do anything else.</p>
+    <p class="govuk-body"><a class="govuk-link" href="/complete/projects-to-hand-over">Go to projects to hand over in Complete</a></p>
+  </div>
+</div>
+{% endblock %}

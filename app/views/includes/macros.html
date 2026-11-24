@@ -1,0 +1,27 @@
+{# Macros in imported files don't get the kit's automatic imports, so import them here #}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% macro projectCaption(project) %}
+  <div class="app-project-caption">
+    <span class="govuk-caption-l">{{ project.schoolName }}</span>
+    {{ govukTag({ text: project.type, classes: "govuk-tag--purple" }) }}
+  </div>
+{% endmacro %}
+
+{% macro errorSummary(errorList) %}
+  {% if errorList and errorList.length %}
+    {{ govukErrorSummary({ titleText: "There is a problem", errorList: errorList }) }}
+  {% endif %}
+{% endmacro %}
+
+{# Continue + Save and come back later, shown on every handover question #}
+{% macro handoverButtons(change) %}
+  <div class="govuk-button-group">
+    {{ govukButton({ text: "Continue", name: "action", value: "continue" }) }}
+    {% if not change %}
+      {{ govukButton({ text: "Save and come back later", name: "action", value: "save", classes: "govuk-button--secondary" }) }}
+    {% endif %}
+  </div>
+{% endmacro %}

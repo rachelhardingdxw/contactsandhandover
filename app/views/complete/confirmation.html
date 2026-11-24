@@ -1,0 +1,28 @@
+{% extends "layouts/complete.html" %}
+{% set rcs = data["rcs"] == "yes" %}
+{% set pageName = "Project handed over to Regional Casework Services" if rcs else "Project assigned to you" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    {{ govukPanel({
+      titleText: pageName,
+      html: project.schoolName + "<br>URN " + project.urn
+    }) }}
+
+    <h2 class="govuk-heading-m">What happens next</h2>
+    {% if rcs %}
+      <p class="govuk-body">The project is now in the Regional Casework Services project list. They will assign a caseworker and arrange the kick-off meeting.</p>
+    {% else %}
+      <p class="govuk-body">The project is now in your project list in Complete.</p>
+    {% endif %}
+
+    <h2 class="govuk-heading-m">Hand over another project</h2>
+    <p class="govuk-body">Go back to Prepare to record more decisions, or see all the projects waiting to be handed over.</p>
+    <ul class="govuk-list">
+      <li><a class="govuk-link" href="/prepare/project">Return to your projects in Prepare</a></li>
+      <li><a class="govuk-link" href="/complete/projects-to-hand-over">See projects to hand over</a></li>
+    </ul>
+  </div>
+</div>
+{% endblock %}

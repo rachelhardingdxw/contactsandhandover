@@ -1,6 +1,149 @@
 //
 // For guidance on how to add CSS and SCSS see:
 // https://prototype-kit.service.gov.uk/adding-css-javascript-and-images/
-// 
+//
 
-// Add extra styles here
+// DfE header (as used by Prepare and Complete)
+.app-dfe-header {
+  background-color: #1d70b8;
+  color: #ffffff;
+  font-family: arial, sans-serif;
+}
+
+.app-dfe-header__container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 60px;
+}
+
+// Keep the header links white whatever link state GOV.UK Frontend applies
+.app-dfe-header a.app-dfe-header__logo:link,
+.app-dfe-header a.app-dfe-header__logo:visited,
+.app-dfe-header a.app-dfe-header__search:link,
+.app-dfe-header a.app-dfe-header__search:visited {
+  color: #ffffff;
+}
+
+// Prepare and Complete show the service name and links on one row, in 16px text
+@media (min-width: 40.0625em) {
+  .govuk-service-navigation__container {
+    flex-wrap: nowrap;
+  }
+
+  .govuk-service-navigation__list {
+    flex-wrap: nowrap;
+  }
+
+  .govuk-service-navigation__service-name,
+  .govuk-service-navigation__item {
+    white-space: nowrap;
+  }
+
+  .govuk-service-navigation__service-name,
+  .govuk-service-navigation__link {
+    font-size: 16px;
+    line-height: 1.25;
+  }
+
+  .govuk-service-navigation__service-name {
+    margin-right: 25px;
+  }
+
+  .govuk-service-navigation__item {
+    margin-right: 15px;
+  }
+}
+
+.app-dfe-header__logo {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 19px;
+  line-height: 25px;
+  padding-left: 10px;
+  border-left: 2px solid #ffffff;
+}
+
+.app-dfe-header__logo:hover {
+  text-decoration: underline;
+}
+
+.app-dfe-header__logo:focus {
+  color: #0b0c0c;
+}
+
+.app-dfe-header__search {
+  color: #ffffff;
+  display: inline-flex;
+}
+
+// Problems and feedback block above the footer, as in Prepare and Complete
+.app-feedback {
+  background-color: #f4f8fb;
+  border-top: 10px solid #1d70b8;
+  padding-top: 40px;
+}
+
+.app-feedback .govuk-section-break {
+  border-color: #8eb8dc;
+}
+
+.app-feedback__rule {
+  max-width: 400px;
+  border-bottom: 1px solid #8eb8dc;
+  margin-bottom: 20px;
+}
+
+.app-feedback + .govuk-footer {
+  border-top: 0;
+  padding-top: 0;
+}
+
+// Project caption with a project type tag
+.app-project-caption {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 5px;
+}
+
+.app-project-caption .govuk-caption-l {
+  margin-bottom: 0;
+}
+
+// Secondary navigation band under "All projects" in Complete
+.app-secondary-nav {
+  background-color: #f3f2f1;
+}
+
+.app-secondary-nav__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 20px;
+}
+
+.app-secondary-nav__link {
+  text-decoration: none;
+  display: inline-block;
+  padding: 12px 0;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.app-secondary-nav__item--current .app-secondary-nav__link {
+  color: #0b0c0c;
+  text-decoration: none;
+  padding-bottom: 7px;
+  border-bottom: 5px solid #1d70b8;
+}
+
+// Prototype-only settings panel on the start page
+.app-prototype-panel {
+  border: 2px dashed #b1b4b6;
+  padding: 20px;
+  margin-bottom: 30px;
+}

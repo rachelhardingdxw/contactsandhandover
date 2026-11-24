@@ -1,0 +1,74 @@
+{% extends "layouts/complete.html" %}
+{% from "includes/macros.html" import projectCaption %}
+{% set pageName = "Check your answers before handing over this project" %}
+{% set backLink = "/complete/handover/two-ri" %}
+
+{% set yesNo = { yes: "Yes", no: "No" } %}
+{% set proformaText = { received: "Received", requested: "Requested but not received yet", "not-requested": "Not requested yet" } %}
+
+{% macro withReason(answer, reason) -%}
+  {{ answer }}{% if reason %}<br><span class="govuk-hint govuk-!-margin-0">Reason: {{ reason }}</span>{% endif %}
+{%- endmacro %}
+
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    {{ projectCaption(project) }}
+    <h1 class="govuk-heading-l">Check your answers before handing over this project</h1>
+
+    <h2 class="govuk-heading-m">Project details</h2>
+    <p class="govuk-body">These details come from Prepare. You cannot change them here.</p>
+    {{ govukSummaryList({ rows: [
+      { key: { text: "School" }, value: { text: project.schoolName } },
+      { key: { text: "URN" }, value: { text: project.urn } },
+      { key: { text: "Incoming trust" }, value: { text: project.incomingTrust } },
+      { key: { text: "Decision" }, value: { text: "Approved" } },
+      { key: { text: "Provisional conversion date" }, value: { text: project.conversionDate } }
+    ] }) }}
+
+    <h2 class="govuk-heading-m">Handover</h2>
+    {% set notSet = "Not answered" %}
+    {{ govukSummaryList({ rows: [
+      { key: { text: "Managed by RCS" }, value: { text: yesNo[data["rcs"]] }, actions: { items: [ { href: "/complete/handover/rcs?change=1", text: "Change", visuallyHiddenText: "who will manage the project" } ] } },
+      { key: { text: "Conversion date discussed with local authority" }, value: { html: withReason(yesNo[data["date-discussed"]] or notSet, data["date-reason"]) }, actions: { items: [ { href: "/complete/handover/handover-details?change=1#date-discussed", text: "Change", visuallyHiddenText: "conversion date discussed" } ] } },
+      { key: { text: "Local authority proforma" }, value: { html: withReason(proformaText[data["proforma"]] or notSet, data["proforma-reason"]) }, actions: { items: [ { href: "/complete/handover/handover-details?change=1#proforma", text: "Change", visuallyHiddenText: "local authority proforma" } ] } },
+      { key: { text: "Introduction email sent" }, value: { html: withReason(yesNo[data["intro-email"]] or notSet, data["email-reason"]) }, actions: { items: [ { href: "/complete/handover/handover-details?change=1#intro-email", text: "Change", visuallyHiddenText: "introduction email" } ] } },
+      { key: { text: "SFSO lead" }, value: { text: data["sfso"] or notSet }, actions: { items: [ { href: "/complete/handover/handover-details?change=1#sfso", text: "Change", visuallyHiddenText: "SFSO lead" } ] } },
+      { key: { text: "Other handover notes" }, value: { text: data["other-notes"] or "None" }, actions: { items: [ { href: "/complete/handover/handover-details?change=1#other-notes", text: "Change", visuallyHiddenText: "other handover notes" } ] } },
+      { key: { text: "School SharePoint folder" }, value: { text: data["school-link"] }, actions: { items: [ { href: "/complete/handover/sharepoint?change=1", text: "Change", visuallyHiddenText: "school SharePoint folder" } ] } },
+      { key: { text: "Incoming trust SharePoint folder" }, value: { text: data["trust-link"] }, actions: { items: [ { href: "/complete/handover/sharepoint?change=1#trust-link", text: "Change", visuallyHiddenText: "incoming trust SharePoint folder" } ] } },
+      { key: { text: "Intervention following 2RI" }, value: { text: yesNo[data["two-ri"]] }, actions: { items: [ { href: "/complete/handover/two-ri?change=1", text: "Change", visuallyHiddenText: "intervention following 2RI" } ] } }
+    ] }) }}
+
+    <h2 class="govuk-heading-m">External contacts</h2>
+    <p class="govuk-body">These contacts were added in Prepare. Changes you make here will update the details viewed in Prepare as well.</p>
+    {% set contactRows = [] %}
+    {% for org in ["school", "trust", "la", "solicitor", "diocese"] %}
+      {% set status = data[org + "-status"] %}
+      {% if status != "not-needed" %}
+        {% if status == "completed" %}
+          {% set valueHtml = (data[org + "-name"] | escape) + "<br>" + (data[org + "-job"] | escape) + (" (primary contact)" if data[org + "-primary"] == "yes" else "") + "<br>" + (data[org + "-email"] | escape) %}
+          {% set actionText = "Change" %}
+        {% elif status == "cannot-add" %}
+          {% set valueHtml = "Contact details not added yet<br><strong>Reason:</strong> " + (data[org + "-reason"] | escape) %}
+          {% set actionText = "Add contact" %}
+        {% else %}
+          {% set valueHtml = "Not added in Prepare" %}
+          {% set actionText = "Add contact" %}
+        {% endif %}
+        {% set contactRows = contactRows.concat([{
+          key: { text: orgs[org].heading },
+          value: { html: valueHtml },
+          actions: { items: [ { href: "/complete/handover/contacts/" + org, text: actionText, visuallyHiddenText: orgs[org].heading | lower + " contact" } ] }
+        }]) %}
+      {% endif %}
+    {% endfor %}
+    {{ govukSummaryList({ rows: contactRows }) }}
+
+    <form method="post" novalidate>
+      {{ govukButton({ text: "Confirm and hand over", preventDoubleClick: true }) }}
+    </form>
+  </div>
+</div>
+{% endblock %}

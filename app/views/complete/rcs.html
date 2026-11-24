@@ -1,0 +1,24 @@
+{% extends "layouts/complete.html" %}
+{% from "includes/macros.html" import projectCaption, errorSummary, handoverButtons %}
+{% set pageName = "Will Regional Casework Services (RCS) manage this project?" %}
+{% set backLink = "/complete/handover/check-answers" if change else "/complete/projects-to-hand-over" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    {{ errorSummary(errorList) }}
+    <form method="post" novalidate>
+      {{ projectCaption(project) }}
+      {{ govukRadios({
+        idPrefix: "rcs",
+        name: "rcs",
+        value: data["rcs"],
+        fieldset: { legend: { text: "Will Regional Casework Services (RCS) manage this project?", isPageHeading: true, classes: "govuk-fieldset__legend--l" } },
+        errorMessage: { text: errors["rcs"] } if errors and errors["rcs"],
+        items: [ { value: "yes", text: "Yes" }, { value: "no", text: "No" } ]
+      }) }}
+      {{ handoverButtons(change) }}
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,20 +1,56 @@
 {% extends "layouts/main.html" %}
-
-{% set pageName="Home" %}
+{% set pageName = "Prototype start page" %}
 
 {% block content %}
-
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
+    <span class="govuk-caption-l">Prototype – iteration 1</span>
+    <h1 class="govuk-heading-xl">Prepare to Complete handover</h1>
 
-    {% include "govuk-prototype-kit/includes/homepage-top.njk" %}
+    {% if updated %}
+      {{ govukNotificationBanner({ type: "success", text: "Scenario settings saved." }) }}
+    {% endif %}
 
-    <h1 class="govuk-heading-xl">
-      {{ serviceName }}
-    </h1>
+    <p class="govuk-body">This prototype covers adding contact details in Prepare, recording a decision, and handing the project over in Complete.</p>
+    <p class="govuk-body">The example project is {{ project.schoolName }} (URN {{ project.urn }}).</p>
 
-    {% include "govuk-prototype-kit/includes/homepage-bottom.njk" %}
+    <h2 class="govuk-heading-m">Start points</h2>
+    <ul class="govuk-list govuk-list--spaced">
+      <li><a class="govuk-link" href="/prepare/project">Prepare: project task list</a> – add contacts, then record the decision</li>
+      <li><a class="govuk-link" href="/prepare/decision-recorded">Prepare: decision recorded</a> – start the handover straight away</li>
+      <li><a class="govuk-link" href="/complete/projects-to-hand-over">Complete: projects to hand over</a> – hand over later from the list</li>
+    </ul>
+
+    <div class="app-prototype-panel">
+      <h2 class="govuk-heading-m">Scenario settings</h2>
+      <form method="post" action="/settings" novalidate>
+        {{ govukRadios({
+          name: "previous-contacts",
+          classes: "govuk-radios--small",
+          value: data["previous-contacts"] or "yes",
+          fieldset: { legend: { text: "Are trust and school contacts available from a previous application?", classes: "govuk-fieldset__legend--s" } },
+          items: [ { value: "yes", text: "Yes – pre-fill the forms" }, { value: "no", text: "No – empty forms" } ]
+        }) }}
+        {{ govukRadios({
+          name: "setup-outcome",
+          classes: "govuk-radios--small",
+          value: data["setup-outcome"] or "normal",
+          fieldset: { legend: { text: "When the DO opens Complete straight from Prepare", classes: "govuk-fieldset__legend--s" } },
+          items: [ { value: "normal", text: "The project is ready after a short wait" }, { value: "timeout", text: "The project takes longer than usual (shows the timeout page)" } ]
+        }) }}
+        {{ govukInput({
+          id: "setup-delay",
+          name: "setup-delay",
+          classes: "govuk-input--width-3",
+          value: data["setup-delay"] or "6",
+          inputmode: "numeric",
+          label: { text: "Seconds to show the holding page", classes: "govuk-label--s" },
+          hint: { text: "The live service takes between 5 and 60 seconds." }
+        }) }}
+        {{ govukButton({ text: "Save settings", classes: "govuk-button--secondary" }) }}
+      </form>
+      <p class="govuk-body"><a class="govuk-link" href="/manage-prototype/clear-data">Clear all prototype data</a> to start again.</p>
+    </div>
   </div>
 </div>
-
 {% endblock %}

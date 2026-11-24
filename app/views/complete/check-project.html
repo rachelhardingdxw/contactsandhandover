@@ -1,0 +1,30 @@
+{% extends "layouts/complete.html" %}
+{% set pageName = "Check you have the right project" %}
+{% set navActive = "all-projects" %}
+{% set backLink = "/complete/projects-to-hand-over" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-l">Check you have the right project</h1>
+    {{ govukSummaryList({ rows: [
+      { key: { text: "School name" }, value: { text: project.schoolName } },
+      { key: { text: "URN" }, value: { text: project.urn } },
+      { key: { text: "Project type" }, value: { text: project.type } },
+      { key: { text: "Form a MAT?" }, value: { text: "No" } },
+      { key: { text: "Incoming trust name" }, value: { text: project.incomingTrust } },
+      { key: { text: "Incoming trust UKPRN" }, value: { text: project.trustUkprn } },
+      { key: { text: "Date of decision" }, value: { text: project.decisionDate } },
+      { key: { text: "Provisional conversion date" }, value: { text: project.conversionDate } },
+      { key: { text: "Type of academy order" }, value: { text: project.academyOrder } },
+      { key: { text: "Assigned in Prepare" }, value: { text: project.owner } }
+    ] }) }}
+    <form method="post" novalidate>
+      <div class="govuk-button-group">
+        {{ govukButton({ text: "Confirm" }) }}
+        <a class="govuk-link" href="/complete/projects-to-hand-over">Choose a different project</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "layouts/complete.html" %}
+{% from "includes/macros.html" import projectCaption, errorSummary %}
+{% set pageName = "Contact for " + orgs[org].label %}
+{% set backLink = "/complete/handover/check-answers" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    {{ errorSummary(errorList) }}
+    <form method="post" novalidate>
+      {{ projectCaption(project) }}
+      <h1 class="govuk-heading-l">{{ "Change the contact" if data[org + "-status"] == "completed" else "Add a contact" }} for {{ orgs[org].label }}</h1>
+
+      {{ govukInput({ label: { text: "Full name", classes: "govuk-label--s" }, id: "contact-name", name: org + "-name", value: data[org + "-name"], autocomplete: "name", spellcheck: false, errorMessage: { text: errors["contact-name"] } if errors and errors["contact-name"] }) }}
+      {{ govukInput({ label: { text: "Job title", classes: "govuk-label--s" }, id: "contact-job", name: org + "-job", value: data[org + "-job"], errorMessage: { text: errors["contact-job"] } if errors and errors["contact-job"] }) }}
+      {{ govukInput({ label: { text: "Email", classes: "govuk-label--s" }, hint: { text: "This must be the person’s work email address, or address at the school, academy or trust their role is relevant to." }, id: "contact-email", name: org + "-email", type: "email", value: data[org + "-email"], autocomplete: "email", spellcheck: false, errorMessage: { text: errors["contact-email"] } if errors and errors["contact-email"] }) }}
+      {{ govukInput({ label: { text: "Phone (optional)", classes: "govuk-label--s" }, id: "contact-phone", name: org + "-phone", type: "tel", value: data[org + "-phone"], classes: "govuk-input--width-20", errorMessage: { text: errors["contact-phone"] } if errors and errors["contact-phone"] }) }}
+      {{ govukRadios({
+        idPrefix: "contact-primary",
+        name: org + "-primary",
+        classes: "govuk-radios--inline",
+        value: data[org + "-primary"],
+        fieldset: { legend: { text: "Is this person the primary project contact for the organisation?", classes: "govuk-fieldset__legend--s" } },
+        errorMessage: { text: errors["contact-primary"] } if errors and errors["contact-primary"],
+        items: [ { value: "yes", text: "Yes" }, { value: "no", text: "No" } ]
+      }) }}
+      <div class="govuk-button-group">
+        {{ govukButton({ text: "Save and return to check answers" }) }}
+        <a class="govuk-link" href="/complete/handover/check-answers">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

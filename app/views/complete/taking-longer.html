@@ -1,0 +1,17 @@
+{% extends "layouts/complete.html" %}
+{% from "includes/macros.html" import projectCaption %}
+{% set pageName = "This project is taking longer than usual to set up" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    {{ projectCaption(project) }}
+    <h1 class="govuk-heading-l">This project is taking longer than usual to set up</h1>
+    <p class="govuk-body">Your decision has been recorded in Prepare. You do not need to record it again.</p>
+    <p class="govuk-body">Try again in a few minutes. If it’s still not ready, you can hand over this project later from the Handover tab in Complete. Your Prepare tab is still open if you need it.</p>
+    {{ govukButton({ text: "Try again", href: "/complete/handover/setting-up/check?retry=1" }) }}
+    <p class="govuk-body"><a class="govuk-link" href="/complete/projects-to-hand-over">Go to projects to hand over in Complete</a></p>
+    <p class="govuk-body">If the project has not appeared in Complete after an hour, <a class="govuk-link" href="#">contact service support</a>.</p>
+  </div>
+</div>
+{% endblock %}

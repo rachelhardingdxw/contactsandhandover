@@ -1,0 +1,34 @@
+{% extends "layouts/prepare.html" %}
+{% from "includes/macros.html" import errorSummary %}
+{% set pageName = "Find a contact from another project" %}
+{% set navActive = "conversions" %}
+{% set backLink = "/prepare/contacts/diocese/diocese-needed" if org == "diocese" else "/prepare/project" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    {{ errorSummary(errorList) }}
+    <form method="post" novalidate>
+      <span class="govuk-caption-l">{{ project.schoolName }}</span>
+      <h1 class="govuk-heading-l">Find a contact for {{ orgs[org].label }} from another project</h1>
+
+      {{ govukInput({
+        label: { text: "School URN", classes: "govuk-label--s" },
+        hint: { text: "Enter the URN of a school from a previous project if the contact details you want to use are the same. For example, 123787." },
+        id: "lookup-urn",
+        name: org + "-lookup-urn",
+        value: data[org + "-lookup-urn"],
+        inputmode: "numeric",
+        spellcheck: false,
+        classes: "govuk-input--width-10",
+        errorMessage: { text: errors["lookup-urn"] } if errors and errors["lookup-urn"]
+      }) }}
+
+      <div class="govuk-button-group">
+        {{ govukButton({ text: "Save and continue" }) }}
+        <a class="govuk-link" href="/prepare/contacts/{{ org }}/details?manual=1">Enter contact manually</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

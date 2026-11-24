@@ -1,0 +1,80 @@
+{% extends "layouts/complete.html" %}
+{% from "includes/macros.html" import projectCaption, errorSummary, handoverButtons %}
+{% set pageName = "Handover details" %}
+{% set backLink = "/complete/handover/check-answers" if change else "/complete/handover/rcs" %}
+{% set opt = "" if data["rcs"] == "yes" else " (optional)" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    {{ errorSummary(errorList) }}
+    <form method="post" novalidate>
+      {{ projectCaption(project) }}
+      <h1 class="govuk-heading-l">Handover details</h1>
+      {% if data["rcs"] != "yes" %}
+        <p class="govuk-body">You’ll keep managing this project, so these questions are optional.</p>
+      {% endif %}
+
+      {% set dateReason %}
+        {{ govukTextarea({ id: "date-reason", name: "date-reason", rows: 3, value: data["date-reason"], label: { text: "Why has it not been discussed yet?" + opt, classes: "govuk-label--s" }, errorMessage: { text: errors["date-reason"] } if errors and errors["date-reason"] }) }}
+      {% endset %}
+      {{ govukRadios({
+        idPrefix: "date-discussed",
+        name: "date-discussed",
+        value: data["date-discussed"],
+        fieldset: { legend: { text: "Has the provisional conversion date been discussed with the local authority?" + opt, classes: "govuk-fieldset__legend--m" } },
+        errorMessage: { text: errors["date-discussed"] } if errors and errors["date-discussed"],
+        items: [ { value: "yes", text: "Yes" }, { value: "no", text: "No", conditional: { html: dateReason } } ]
+      }) }}
+
+      {% set proformaReason %}
+        {{ govukTextarea({ id: "proforma-reason", name: "proforma-reason", rows: 3, value: data["proforma-reason"], label: { text: "Why has it not been requested yet?" + opt, classes: "govuk-label--s" }, errorMessage: { text: errors["proforma-reason"] } if errors and errors["proforma-reason"] }) }}
+      {% endset %}
+      {{ govukRadios({
+        idPrefix: "proforma",
+        name: "proforma",
+        value: data["proforma"],
+        fieldset: { legend: { text: "Has the local authority proforma been received?" + opt, classes: "govuk-fieldset__legend--m" } },
+        errorMessage: { text: errors["proforma"] } if errors and errors["proforma"],
+        items: [
+          { value: "received", text: "Yes, it has been received" },
+          { value: "requested", text: "No, it has been requested but not received yet" },
+          { value: "not-requested", text: "No, it has not been requested yet", conditional: { html: proformaReason } }
+        ]
+      }) }}
+
+      {% set emailReason %}
+        {{ govukTextarea({ id: "email-reason", name: "email-reason", rows: 3, value: data["email-reason"], label: { text: "Why has the email not been sent yet?" + opt, classes: "govuk-label--s" }, errorMessage: { text: errors["email-reason"] } if errors and errors["email-reason"] }) }}
+      {% endset %}
+      {{ govukRadios({
+        idPrefix: "intro-email",
+        name: "intro-email",
+        value: data["intro-email"],
+        fieldset: { legend: { text: "Has the introduction and next steps email been sent to external stakeholders?" + opt, classes: "govuk-fieldset__legend--m" } },
+        errorMessage: { text: errors["intro-email"] } if errors and errors["intro-email"],
+        items: [ { value: "yes", text: "Yes" }, { value: "no", text: "No", conditional: { html: emailReason } } ]
+      }) }}
+
+      {{ govukInput({
+        id: "sfso",
+        name: "sfso",
+        value: data["sfso"],
+        label: { text: "Who is the Schools Financial Support and Oversight (SFSO) lead?" + opt, classes: "govuk-label--m" },
+        errorMessage: { text: errors["sfso"] } if errors and errors["sfso"]
+      }) }}
+
+      {{ govukCharacterCount({
+        id: "other-notes",
+        name: "other-notes",
+        maxlength: 500,
+        value: data["other-notes"],
+        label: { text: "Is there anything else RCS needs to know? (optional)" if data["rcs"] == "yes" else "Is there anything else to note? (optional)", classes: "govuk-label--m" },
+        hint: { text: "For example, risks, concerns, details about progress." },
+        errorMessage: { text: errors["other-notes"] } if errors and errors["other-notes"]
+      }) }}
+
+      {{ handoverButtons(change) }}
+    </form>
+  </div>
+</div>
+{% endblock %}

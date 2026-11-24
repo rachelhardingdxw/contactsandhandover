@@ -1,0 +1,44 @@
+{% extends "layouts/complete.html" %}
+{% from "includes/macros.html" import projectCaption, errorSummary, handoverButtons %}
+{% set pageName = "SharePoint folder links" %}
+{% set backLink = "/complete/handover/check-answers" if change else "/complete/handover/handover-details" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    {{ errorSummary(errorList) }}
+    <form method="post" novalidate>
+      {{ projectCaption(project) }}
+      <h1 class="govuk-heading-l">SharePoint folder links</h1>
+
+      {% set schoolHint %}
+        <p class="govuk-body govuk-hint">If the school applied to convert, you must save the application form in the school’s SharePoint folder.</p>
+        <p class="govuk-body govuk-hint govuk-!-margin-bottom-0">You must also save the academy order and HQTF project template in this folder. Do this whether the school applied to convert or not.</p>
+      {% endset %}
+      {{ govukInput({
+        id: "school-link",
+        name: "school-link",
+        type: "url",
+        spellcheck: false,
+        value: data["school-link"],
+        label: { text: "School SharePoint link", classes: "govuk-label--m" },
+        hint: { html: schoolHint },
+        errorMessage: { text: errors["school-link"] } if errors and errors["school-link"]
+      }) }}
+
+      {{ govukInput({
+        id: "trust-link",
+        name: "trust-link",
+        type: "url",
+        spellcheck: false,
+        value: data["trust-link"],
+        label: { text: "Incoming trust SharePoint link", classes: "govuk-label--m" },
+        hint: { text: "Provide a link to the SharePoint folder for the incoming trust. This is where you save all the relevant trust documents." },
+        errorMessage: { text: errors["trust-link"] } if errors and errors["trust-link"]
+      }) }}
+
+      {{ handoverButtons(change) }}
+    </form>
+  </div>
+</div>
+{% endblock %}

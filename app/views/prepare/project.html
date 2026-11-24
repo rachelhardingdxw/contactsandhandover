@@ -1,0 +1,51 @@
+{% extends "layouts/prepare.html" %}
+{% set pageName = "Task list" %}
+{% set navActive = "conversions" %}
+{% set backLink = "/" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <span class="govuk-caption-l">URN: {{ project.urn }}</span>
+    <h1 class="govuk-heading-xl">{{ project.schoolName }}</h1>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <p class="govuk-body govuk-!-margin-bottom-1">Route: {{ project.route }}</p>
+    <p class="govuk-body">Project owner: <strong>{{ project.owner }}</strong></p>
+    <p class="govuk-body">
+      {% if decided %}
+        {{ govukTag({ text: "Approved", classes: "govuk-tag--green" }) }}
+      {% else %}
+        {{ govukTag({ text: "Pre-decision", classes: "govuk-tag--yellow" }) }}
+      {% endif %}
+    </p>
+
+    <h2 class="govuk-heading-m govuk-!-margin-top-6">About the project</h2>
+    {{ govukTaskList({
+      idPrefix: "about",
+      items: [
+        { title: { text: "Project details" }, href: "#", status: { text: "Completed" } },
+        { title: { text: "School application form" }, href: "#", status: { text: "Completed" } }
+      ]
+    }) }}
+
+    <h2 class="govuk-heading-m">Contact details</h2>
+    {{ govukTaskList({ idPrefix: "contacts", items: contactItems }) }}
+
+    <h2 class="govuk-heading-m">Decision</h2>
+    {{ govukTaskList({
+      idPrefix: "decision",
+      items: [
+        {
+          title: { text: "Record a decision" },
+          href: "/prepare/decision-recorded" if decided else "/prepare/decision",
+          status: { text: "Completed" } if decided else { tag: { text: "Not started", classes: "govuk-tag--grey" } }
+        }
+      ]
+    }) }}
+  </div>
+</div>
+{% endblock %}

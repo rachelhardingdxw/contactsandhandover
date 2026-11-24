@@ -1,0 +1,29 @@
+{% extends "layouts/prepare.html" %}
+{% from "includes/macros.html" import errorSummary %}
+{% set pageName = "Why are you not able to add a contact?" %}
+{% set navActive = "conversions" %}
+{% set backLink = "/prepare/contacts/" + org + "/details" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    {{ errorSummary(errorList) }}
+    <form method="post" novalidate>
+      <span class="govuk-caption-l">{{ project.schoolName }}</span>
+      {{ govukCharacterCount({
+        id: "reason",
+        name: org + "-reason",
+        maxlength: 500,
+        value: data[org + "-reason"],
+        label: { text: "Why are you not able to add a contact for " + orgs[org].label + "?", isPageHeading: true, classes: "govuk-label--l" },
+        hint: { text: "For example, a solicitor has not been appointed yet. The team taking over the project will see this." },
+        errorMessage: { text: errors["reason"] } if errors and errors["reason"]
+      }) }}
+      <div class="govuk-button-group">
+        {{ govukButton({ text: "Save and return" }) }}
+        <a class="govuk-link" href="/prepare/contacts/{{ org }}/details">Add a contact</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "layouts/prepare.html" %}
+{% from "includes/macros.html" import errorSummary %}
+{% set pageName = "Record a decision" %}
+{% set navActive = "conversions" %}
+{% set backLink = "/prepare/project" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    {{ errorSummary(errorList) }}
+    <form method="post" novalidate>
+      <span class="govuk-caption-l">{{ project.schoolName }}</span>
+      {{ govukInsetText({ text: "Prototype shortcut: the real Prepare decision journey has several pages (who decided, conditions, dates). They are skipped here." }) }}
+      {{ govukRadios({
+        idPrefix: "decision",
+        name: "decision",
+        value: data["decision"],
+        fieldset: { legend: { text: "What was the decision?", isPageHeading: true, classes: "govuk-fieldset__legend--l" } },
+        errorMessage: { text: errors["decision"] } if errors and errors["decision"],
+        items: [ { value: "approved", text: "Approved" }, { value: "declined", text: "Declined" }, { value: "deferred", text: "Deferred" } ]
+      }) }}
+      {{ govukButton({ text: "Record decision" }) }}
+    </form>
+  </div>
+</div>
+{% endblock %}

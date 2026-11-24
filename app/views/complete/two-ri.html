@@ -1,0 +1,25 @@
+{% extends "layouts/complete.html" %}
+{% from "includes/macros.html" import projectCaption, errorSummary, handoverButtons %}
+{% set pageName = "Is this conversion due to intervention following 2RI?" %}
+{% set backLink = "/complete/handover/check-answers" if change else "/complete/handover/sharepoint" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    {{ errorSummary(errorList) }}
+    <form method="post" novalidate>
+      {{ projectCaption(project) }}
+      {{ govukRadios({
+        idPrefix: "two-ri",
+        name: "two-ri",
+        value: data["two-ri"],
+        fieldset: { legend: { text: "Is this conversion due to intervention following 2RI?", isPageHeading: true, classes: "govuk-fieldset__legend--l" } },
+        hint: { text: "A 2RI conversion is when a local authority maintained school becomes an academy after getting at least 2 overall Requires Improvement ratings from Ofsted." },
+        errorMessage: { text: errors["two-ri"] } if errors and errors["two-ri"],
+        items: [ { value: "yes", text: "Yes" }, { value: "no", text: "No" } ]
+      }) }}
+      {{ handoverButtons(change) }}
+    </form>
+  </div>
+</div>
+{% endblock %}

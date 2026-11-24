@@ -1,0 +1,37 @@
+{% extends "layouts/complete.html" %}
+{% from "includes/macros.html" import projectCaption %}
+{% set pageName = "We’re setting up this project in Complete" %}
+
+{% block meta %}
+  {# Fallback if JavaScript is off: refresh after the wait #}
+  <noscript><meta http-equiv="refresh" content="{{ waitSeconds }};url=/complete/handover/setting-up/check"></noscript>
+{% endblock %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    {{ projectCaption(project) }}
+    <h1 class="govuk-heading-l">We’re setting up this project in Complete</h1>
+    <p class="govuk-body">This usually takes less than a minute.</p>
+    <p class="govuk-body">This page will update automatically. When the project is ready, you’ll go straight to the handover questions.</p>
+    <p class="govuk-body govuk-visually-hidden" aria-live="polite" id="setup-status"></p>
+
+    <h2 class="govuk-heading-m">If you do not want to wait</h2>
+    <p class="govuk-body">You can hand over this project later from the Handover tab in Complete. Your Prepare tab is still open if you need it.</p>
+    <p class="govuk-body"><a class="govuk-link" href="/complete/projects-to-hand-over">Go to projects to hand over in Complete</a></p>
+  </div>
+</div>
+{% endblock %}
+
+{% block pageScripts %}
+<script>
+  // Prototype: pretend Complete polls for the project, then move on
+  (function () {
+    var status = document.getElementById('setup-status')
+    setTimeout(function () {
+      status.textContent = 'The project is ready. Going to the handover questions.'
+      setTimeout(function () { window.location.href = '/complete/handover/setting-up/check' }, 800)
+    }, {{ waitSeconds * 1000 }})
+  })()
+</script>
+{% endblock %}

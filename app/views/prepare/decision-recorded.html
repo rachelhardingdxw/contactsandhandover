@@ -1,0 +1,36 @@
+{% extends "layouts/prepare.html" %}
+{% set pageName = "Decision recorded" %}
+{% set navActive = "conversions" %}
+{% set backLink = "/prepare/project" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    {% set bannerHtml %}
+      <h3 class="govuk-notification-banner__heading">Decision recorded</h3>
+      <p class="govuk-body">{{ project.schoolName }}</p>
+      <p class="govuk-body">This project is now locked and you cannot make changes to it. You can only <a class="govuk-notification-banner__link" href="#">enter or change the date the academy order was sent to the school.</a></p>
+    {% endset %}
+    {{ govukNotificationBanner({ type: "success", html: bannerHtml, titleText: "Success" }) }}
+
+    <h1 class="govuk-heading-l">Hand this project over in Complete</h1>
+    <p class="govuk-body">The project has been created in Complete. You must add hand over details to the project in Complete before the project can continue.</p>
+
+    {{ govukInsetText({ text: "It can take up to a minute for your project to appear in Complete." }) }}
+
+    <h2 class="govuk-heading-m">You’ll need to add:</h2>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>which team will manage the project next</li>
+      <li>handover comments</li>
+      <li>links to the school and incoming trust SharePoint folders</li>
+    </ul>
+
+    {{ govukButton({
+      text: "Hand over project in Complete (opens in new tab)",
+      href: "/complete/handover/setting-up",
+      isStartButton: true,
+      attributes: { target: "_blank", rel: "noopener" }
+    }) }}
+  </div>
+</div>
+{% endblock %}

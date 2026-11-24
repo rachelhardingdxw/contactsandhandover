@@ -1,0 +1,26 @@
+{% extends "layouts/prepare.html" %}
+{% from "includes/macros.html" import errorSummary %}
+{% set pageName = "Do you need to include a contact for a diocese?" %}
+{% set navActive = "conversions" %}
+{% set backLink = "/prepare/project" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    {{ errorSummary(errorList) }}
+    <form method="post" novalidate>
+      <span class="govuk-caption-l">{{ project.schoolName }}</span>
+      {{ govukRadios({
+        idPrefix: "diocese-needed",
+        name: "diocese-needed",
+        value: data["diocese-needed"],
+        fieldset: { legend: { text: "Do you need to include a contact for a diocese?", isPageHeading: true, classes: "govuk-fieldset__legend--l" } },
+        hint: { text: "You only need a diocese contact if this is a faith school." },
+        errorMessage: { text: errors["diocese-needed"] } if errors and errors["diocese-needed"],
+        items: [ { value: "yes", text: "Yes" }, { value: "no", text: "No" } ]
+      }) }}
+      {{ govukButton({ text: "Save and continue" }) }}
+    </form>
+  </div>
+</div>
+{% endblock %}
